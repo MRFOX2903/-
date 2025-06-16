@@ -12,7 +12,7 @@ class AVLVisualizer(tk.Tk):
 
         # Инициализация дерева и IO
         self.tree = AVLTree()
-        self.tree_io = Tree_Save(self.tree)
+        self.tree_save_io = Tree_Save(self.tree)
 
         # Параметры отрисовки
         self.node_radius = 25
@@ -69,19 +69,19 @@ class AVLVisualizer(tk.Tk):
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
     def load_tree(self):
-        success, msg = self.tree_io.load_from_file()
+        success, msg = self.tree_save_io.load_from_file()
         if success:
             self.update_tree()
         messagebox.showinfo("Уведомление", msg)
 
     def load_tree_at_start(self, silent=True):
-        success, msg = self.tree_io.load_from_file()
+        success, msg = self.tree_save_io.load_from_file()
         if not silent:
             messagebox.showinfo("Уведомление", msg)
         return success
 
     def save_tree(self):
-        success, msg = self.tree_io.save_to_file()
+        success, msg = self.tree_save_io.save_to_file()
         messagebox.showinfo("Уведомление", msg)
 
     def clear_all_nodes(self):
@@ -117,33 +117,32 @@ class AVLVisualizer(tk.Tk):
         required_height = (tree_depth + 2) * self.level_gap
 
         self.canvas.config(scrollregion=(0, 0, required_width, required_height))
-        self._draw_node(self.tree.root, required_width // 2, self.level_gap, required_width // 4)
+        self.draw_node(self.tree.root, required_width // 2, self.level_gap, required_width // 4)
 
-    def _draw_node(self, node, x, y, dx):
+    def draw_node(self, node, x, y, dx):
         if node:
             if node.left:
-                self._draw_line(x, y, x - dx, y + self.level_gap)
-                self._draw_node(node.left, x - dx, y + self.level_gap, dx / 2)
+                self.draw_line(x, y, x - dx, y + self.level_gap)
+                self.draw_node(node.left, x - dx, y + self.level_gap, dx / 2)
             if node.right:
-                self._draw_line(x, y, x + dx, y + self.level_gap)
-                self._draw_node(node.right, x + dx, y + self.level_gap, dx / 2)
+                self.draw_line(x, y, x + dx, y + self.level_gap)
+                self.draw_node(node.right, x + dx, y + self.level_gap, dx / 2)
 
             self.canvas.create_oval(x - self.node_radius,
                                     y - self.node_radius,
                                     x + self.node_radius,
                                     y + self.node_radius,
-                                    fill="lightblue",
+                                    fill="lightgray",
                                     outline="black")
 
-            self.canvas.create_text(x,
-                                    y,
+            self.canvas.create_text(x, y,
                                     text=f"{node.key}",
-                                    font=("Arial", 15, "bold"))
+                                    font=("Times New Roman", 16, "bold italic"))
 
     def _draw_line(self, x1, y1, x2, y2):
         self.canvas.create_line(x1, y1 + self.node_radius,
                                 x2, y2 - self.node_radius,
-                                width=2, fill="gray")
+                                width=2, fill="red")
 
     def on_closing(self):
         self.save_tree()
