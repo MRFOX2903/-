@@ -139,7 +139,7 @@ class AVLVisualizer(tk.Tk):
                                     text=f"{node.key}",
                                     font=("Times New Roman", 16, "bold italic"))
 
-    def _draw_line(self, x1, y1, x2, y2):
+    def draw_line(self, x1, y1, x2, y2):
         self.canvas.create_line(x1, y1 + self.node_radius,
                                 x2, y2 - self.node_radius,
                                 width=2, fill="red")
