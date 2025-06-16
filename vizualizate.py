@@ -22,7 +22,7 @@ class AVLVisualizer(tk.Tk):
         self.create_widgets()
 
         # Загрузка и отрисовка
-        self.load_tree(silent=True)
+        self.load_tree_at_start(silent=True)
         self.update_tree()
 
         # Обработчик закрытия
@@ -46,7 +46,7 @@ class AVLVisualizer(tk.Tk):
         ttk.Button(control_frame, text="Удалить", command=self.delete_node).pack(side=tk.LEFT, padx=5)
         ttk.Button(control_frame, text="Очистить", command=self.clear_all_nodes).pack(side=tk.LEFT, padx=5)
         ttk.Button(control_frame, text="Сохранить", command=self.save_tree).pack(side=tk.LEFT, padx=5)
-        ttk.Button(control_frame, text="Загрузить", command=self.load_tree_at_start).pack(side=tk.LEFT, padx=5)
+        ttk.Button(control_frame, text="Загрузить", command=self.load_tree).pack(side=tk.LEFT, padx=5)
 
         # Холст с прокруткой
         self.canvas_frame = ttk.Frame(main_frame)
@@ -68,15 +68,13 @@ class AVLVisualizer(tk.Tk):
         v_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-    def load_tree_at_start(self):
-        """Загрузка с UI"""
+    def load_tree(self):
         success, msg = self.tree_io.load_from_file()
         if success:
             self.update_tree()
         messagebox.showinfo("Уведомление", msg)
 
-    def load_tree(self, silent=True):
-        """Тихая загрузка при старте"""
+    def load_tree_at_start(self, silent=True):
         success, msg = self.tree_io.load_from_file()
         if not silent:
             messagebox.showinfo("Уведомление", msg)
